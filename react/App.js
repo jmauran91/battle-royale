@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GameContainer from '../containers/GameContainer';
+import GameContainer from './containers/GameContainer';
 
 class App extends Component {
   constructor(props){
