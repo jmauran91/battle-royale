@@ -20,8 +20,7 @@ class ComputerCardsTile extends Component {
 
     return(
       <div>
-        <button onClick={this.getPlayerCard}>DRAW</button>
-
+        <img src={this.props.computerCardImage} />
       </div>
     )
   }
