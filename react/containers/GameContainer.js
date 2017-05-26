@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ComputerCardsTile from '../components/ComputerCardsTile'
+import PlayerCardsTile from '../components/PlayerCardsTile'
 
 class GameContainer extends Component {
   constructor(props){
@@ -10,7 +12,9 @@ class GameContainer extends Component {
       playerCardImage: '',
       computerCardSuit: '',
       computerCardValue: '',
-      computerCardImage: ''
+      computerCardImage: '',
+      playerScore: 0,
+      computerScore: 0
     }
     this.getPlayerCard = this.getPlayerCard.bind(this);
   }
@@ -30,12 +34,16 @@ class GameContainer extends Component {
         playerCardSuit: responseData.cards[0].suit,
         playerCardValue: responseData.cards[0].value,
         playerCardImage: responseData.cards[0].image,
+        playerCardKey: 0,
         computerCardSuit: responseData.cards[1].suit,
         computerCardValue: responseData.cards[1].value,
-        computerCardImage: responseData.cards[1].image
+        computerCardImage: responseData.cards[1].image,
+        computerCardKey: 1
        })
     })
+
   }
+
 
   render() {
 
@@ -44,7 +52,20 @@ class GameContainer extends Component {
     return(
       <div>
         <button onClick={this.getPlayerCard}>DRAW</button>
-
+        <ComputerCardsTile
+        id={this.state.computerCardKey}
+        key={this.state.computerCardKey}
+        computerCardSuit={this.state.computerCardSuit}
+        computerCardValue={this.state.computerCardValue}
+        computerCardImage={this.state.computerCardImage}
+        />
+        <PlayerCardsTile
+        id={this.state.playerCardKey}
+        key={this.state.playerCardKey}
+        playerCardSuit={this.state.playerCardSuit}
+        playerCardValue={this.state.playerCardValue}
+        playerCardImage={this.state.playerCardImage}
+        />
       </div>
     )
   }
