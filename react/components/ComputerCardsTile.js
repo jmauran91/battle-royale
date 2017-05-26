@@ -20,7 +20,7 @@ class ComputerCardsTile extends Component {
 
     return(
       <div>
-        <img src={this.props.computerCardImage} />
+        <img src={this.props.computerCardImage} width='130' />
       </div>
     )
   }

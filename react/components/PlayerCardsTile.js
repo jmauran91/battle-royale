@@ -20,7 +20,7 @@ class PlayerCardsTile extends Component {
 
     return(
       <div>
-        <img src={this.props.playerCardImage} />
+        <img src={this.props.playerCardImage} width='130'/>
       </div>
     )
   }
