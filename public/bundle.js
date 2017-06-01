@@ -19912,11 +19912,7 @@
 
 	var _PlayerCardsTile2 = _interopRequireDefault(_PlayerCardsTile);
 
-	var _GamePlayContainer = __webpack_require__(163);
-
-	var _GamePlayContainer2 = _interopRequireDefault(_GamePlayContainer);
-
-	var _ScoreTile = __webpack_require__(164);
+	var _ScoreTile = __webpack_require__(163);
 
 	var _ScoreTile2 = _interopRequireDefault(_ScoreTile);
 
@@ -19951,6 +19947,9 @@
 	    _this.addPlayerScore = _this.addPlayerScore.bind(_this);
 	    _this.addCompScore = _this.addCompScore.bind(_this);
 	    _this.clearGameScore = _this.clearGameScore.bind(_this);
+	    _this.assessBattle = _this.assessBattle.bind(_this);
+	    _this.readComputerFaces = _this.readComputerFaces.bind(_this);
+	    _this.readPlayerFaces = _this.readPlayerFaces.bind(_this);
 	    return _this;
 	  }
 
@@ -19972,6 +19971,50 @@
 	      var clearcomp = 0;
 	      var clearplayer = 0;
 	      this.setState({ computerScore: clearcomp, playerScore: clearplayer });
+	    }
+	  }, {
+	    key: 'readPlayerFaces',
+	    value: function readPlayerFaces() {
+	      if (this.state.playerCardValue === 'ACE') {
+	        this.setState({ playerCardValue: 14 });
+	      } else if (this.state.playerCardValue === 'KING') {
+	        this.setState({ playerCardValue: 13 });
+	      } else if (this.state.playerCardValue === 'QUEEN') {
+	        this.setState({ playerCardValue: 12 });
+	      } else if (this.state.playerCardValue === 'JACK') {
+	        this.setState({ playerCardValue: 11 });
+	      }
+	    }
+	  }, {
+	    key: 'readComputerFaces',
+	    value: function readComputerFaces() {
+	      if (this.state.computerCardValue === 'ACE') {
+	        this.setState({ computerCardValue: 14 });
+	      } else if (this.state.computerCardValue === 'KING') {
+	        this.setState({ computerCardValue: 13 });
+	      } else if (this.state.computerCardValue === 'QUEEN') {
+	        this.setState({ computerCardValue: 12 });
+	      } else if (this.state.computerCardValue === 'JACK') {
+	        this.setState({ computerCardValue: 11 });
+	      }
+	    }
+	  }, {
+	    key: 'assessBattle',
+	    value: function assessBattle() {
+	      if (typeof this.state.computerCardValue === 'string') {
+	        this.readComputerFaces();
+	      }
+	      if (typeof this.state.playerCardValue === 'string') {
+	        this.readPlayerFaces();
+	      }
+	      if (this.state.computerCardValue > this.state.playerCardValue) {
+	        this.addCompScore();
+	      } else if (this.state.computerCardValue < this.state.playerCardValue) {
+	        this.addPlayerScore();
+	      } else {
+	        this.addPlayerScore();
+	        this.addCompScore();
+	      }
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -19996,30 +20039,34 @@
 	          computerCardImage: responseData.cards[1].image,
 	          computerCardKey: 1
 	        });
+	        _this2.assessBattle();
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
 
-	      var renderGameLogic = function renderGameLogic() {
-	        if (_this3.state.playerCardImage != '') {
-	          return _react2.default.createElement(_GamePlayContainer2.default, {
-	            addPlayerScore: _this3.addPlayerScore,
-	            addCompScore: _this3.addCompScore,
-	            clearGameScore: _this3.clearGameScore,
-	            computer_id: _this3.state.computerCardKey,
-	            computerCardSuit: _this3.state.computerCardSuit,
-	            computerCardValue: _this3.state.computerCardValue,
-	            computerCardImage: _this3.state.computerCardImage,
-	            player_id: _this3.state.playerCardKey,
-	            playerCardSuit: _this3.state.playerCardSuit,
-	            playerCardValue: _this3.state.playerCardValue,
-	            playerCardImage: _this3.state.playerCardImage
-	          });
-	        }
-	      };
+	      // let renderGameLogic = () => {
+	      //   if (this.state.playerCardImage != ''){
+	      //     return(
+	      //       <GamePlayContainer
+	      //       addPlayerScore={this.addPlayerScore}
+	      //       addCompScore={this.addCompScore}
+	      //       clearGameScore={this.clearGameScore}
+	      //       computer_id={this.state.computerCardKey}
+	      //       computerCardSuit={this.state.computerCardSuit}
+	      //       computerCardValue={this.state.computerCardValue}
+	      //       computerCardImage={this.state.computerCardImage}
+	      //       player_id={this.state.playerCardKey}
+	      //       playerCardSuit={this.state.playerCardSuit}
+	      //       playerCardValue={this.state.playerCardValue}
+	      //       playerCardImage={this.state.playerCardImage}
+	      //       />
+	      //     )
+	      //   }
+	      // }
+	      //
+
 
 	      return _react2.default.createElement(
 	        'div',
@@ -20033,7 +20080,30 @@
 	          playerScore: this.state.playerScore,
 	          computerScore: this.state.computerScore
 	        }),
-	        renderGameLogic()
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'computer'
+	        ),
+	        _react2.default.createElement(_ComputerCardsTile2.default, {
+	          id: this.state.computerCardKey,
+	          key: this.state.computerCardKey,
+	          computerCardSuit: this.state.computerCardSuit,
+	          computerCardValue: this.state.computerCardValue,
+	          computerCardImage: this.state.computerCardImage
+	        }),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'player'
+	        ),
+	        _react2.default.createElement(_PlayerCardsTile2.default, {
+	          id: this.state.playerCardKey,
+	          key: this.state.playerCardKey,
+	          playerCardSuit: this.state.playerCardSuit,
+	          playerCardValue: this.state.playerCardValue,
+	          playerCardImage: this.state.playerCardImage
+	        })
 	      );
 	    }
 	  }]);
@@ -20159,103 +20229,6 @@
 
 /***/ }),
 /* 163 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _PlayerCardsTile = __webpack_require__(162);
-
-	var _PlayerCardsTile2 = _interopRequireDefault(_PlayerCardsTile);
-
-	var _ComputerCardsTile = __webpack_require__(161);
-
-	var _ComputerCardsTile2 = _interopRequireDefault(_ComputerCardsTile);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var GamePlayContainer = function (_React$Component) {
-	  _inherits(GamePlayContainer, _React$Component);
-
-	  function GamePlayContainer(props) {
-	    _classCallCheck(this, GamePlayContainer);
-
-	    var _this = _possibleConstructorReturn(this, (GamePlayContainer.__proto__ || Object.getPrototypeOf(GamePlayContainer)).call(this, props));
-
-	    _this.state = {
-	      computerCardValue: null,
-	      playerCardValue: null
-
-	    };
-
-	    _this.assessBattle = _this.assessBattle.bind(_this);
-	    return _this;
-	  }
-
-	  _createClass(GamePlayContainer, [{
-	    key: 'assessBattle',
-	    value: function assessBattle() {
-	      if (this.props.computerCardValue > this.props.playerCardValue) {
-	        this.props.addCompScore();
-	      } else if (this.props.computerCardValue == this.props.playerCardValue) {
-	        this.tieDraw();
-	      } else {
-	        this.props.addPlayerScore();
-	      }
-	    }
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      this.setState({ computerCardValue: this.props.computerCardValue,
-	        playerCardValue: this.props.playerCardValue });
-	      this.assessBattle();
-	    }
-	  }, {
-	    key: 'tieDraw',
-	    value: function tieDraw() {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
-
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(_ComputerCardsTile2.default, {
-	          computerCardImage: this.props.computerCardImage,
-	          computerCardValue: this.props.computerCardValue,
-	          computerCardSuit: this.props.computerCardSuit
-	        }),
-	        _react2.default.createElement(_PlayerCardsTile2.default, {
-	          playerCardImage: this.props.playerCardImage,
-	          playerCardValue: this.props.playerCardValue,
-	          playerCardSuit: this.props.playerCardSuit
-	        })
-	      );
-	    }
-	  }]);
-
-	  return GamePlayContainer;
-	}(_react2.default.Component);
-
-	exports.default = GamePlayContainer;
-
-/***/ }),
-/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';

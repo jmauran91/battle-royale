@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ComputerCardsTile from '../components/ComputerCardsTile'
 import PlayerCardsTile from '../components/PlayerCardsTile'
-import GamePlayContainer from './GamePlayContainer'
 import ScoreTile from '../components/ScoreTile'
 
 class GameContainer extends Component {
@@ -22,6 +21,9 @@ class GameContainer extends Component {
     this.addPlayerScore = this.addPlayerScore.bind(this);
     this.addCompScore = this.addCompScore.bind(this);
     this.clearGameScore = this.clearGameScore.bind(this);
+    this.assessBattle = this.assessBattle.bind(this);
+    this.readComputerFaces = this.readComputerFaces.bind(this);
+    this.readPlayerFaces = this.readPlayerFaces.bind(this);
   }
 
   addPlayerScore(){
@@ -40,8 +42,50 @@ class GameContainer extends Component {
     this.setState({ computerScore: clearcomp, playerScore: clearplayer })
   }
 
-  componentDidMount(){
+  readPlayerFaces(){
+    if (this.state.playerCardValue === 'ACE') {
+      this.setState({ playerCardValue: 14 })
+    } else if (this.state.playerCardValue === 'KING') {
+      this.setState({ playerCardValue: 13 })
+    } else if (this.state.playerCardValue === 'QUEEN') {
+      this.setState({ playerCardValue: 12 })
+    } else if (this.state.playerCardValue === 'JACK') {
+      this.setState({ playerCardValue: 11 })
+    }
+  }
 
+  readComputerFaces(){
+    if (this.state.computerCardValue === 'ACE') {
+      this.setState({ computerCardValue: 14 })
+    } else if (this.state.computerCardValue === 'KING') {
+      this.setState({ computerCardValue: 13 })
+    } else if (this.state.computerCardValue === 'QUEEN') {
+      this.setState({ computerCardValue: 12 })
+    } else if (this.state.computerCardValue === 'JACK') {
+      this.setState({ computerCardValue: 11 })
+    }
+  }
+
+  assessBattle(){
+    if (typeof this.state.computerCardValue === 'string') {
+      this.readComputerFaces();
+    }
+    if (typeof this.state.playerCardValue === 'string') {
+      this.readPlayerFaces();
+    }
+    if (this.state.computerCardValue > this.state.playerCardValue){
+      this.addCompScore();
+    }
+    else if (this.state.computerCardValue < this.state.playerCardValue) {
+      this.addPlayerScore();
+    }
+    else {
+      this.addPlayerScore();
+      this.addCompScore();
+    }
+  }
+
+  componentDidMount(){
   }
 
   getPlayerCard() {
@@ -60,45 +104,58 @@ class GameContainer extends Component {
         computerCardImage: responseData.cards[1].image,
         computerCardKey: 1
        })
+      this.assessBattle();
     })
   }
 
 
   render() {
 
-    let renderGameLogic = () => {
-      if (this.state.playerCardImage != ''){
-        return(
-          <GamePlayContainer
-          addPlayerScore={this.addPlayerScore}
-          addCompScore={this.addCompScore}
-          clearGameScore={this.clearGameScore}
-          computer_id={this.state.computerCardKey}
-          computerCardSuit={this.state.computerCardSuit}
-          computerCardValue={this.state.computerCardValue}
-          computerCardImage={this.state.computerCardImage}
-          player_id={this.state.playerCardKey}
-          playerCardSuit={this.state.playerCardSuit}
-          playerCardValue={this.state.playerCardValue}
-          playerCardImage={this.state.playerCardImage}
-          />
-        )
-      }
-    }
-
+    // let renderGameLogic = () => {
+    //   if (this.state.playerCardImage != ''){
+    //     return(
+    //       <GamePlayContainer
+    //       addPlayerScore={this.addPlayerScore}
+    //       addCompScore={this.addCompScore}
+    //       clearGameScore={this.clearGameScore}
+    //       computer_id={this.state.computerCardKey}
+    //       computerCardSuit={this.state.computerCardSuit}
+    //       computerCardValue={this.state.computerCardValue}
+    //       computerCardImage={this.state.computerCardImage}
+    //       player_id={this.state.playerCardKey}
+    //       playerCardSuit={this.state.playerCardSuit}
+    //       playerCardValue={this.state.playerCardValue}
+    //       playerCardImage={this.state.playerCardImage}
+    //       />
+    //     )
+    //   }
+    // }
+    //
 
 
     return(
       <div>
         <button onClick={this.getPlayerCard}>DRAW</button>
-
         <ScoreTile
-        playerScore={this.state.playerScore}
-        computerScore={this.state.computerScore}
+          playerScore={this.state.playerScore}
+          computerScore={this.state.computerScore}
         />
-
-        {renderGameLogic()}
-
+        <p>computer</p>
+        <ComputerCardsTile
+          id={this.state.computerCardKey}
+          key={this.state.computerCardKey}
+          computerCardSuit={this.state.computerCardSuit}
+          computerCardValue={this.state.computerCardValue}
+          computerCardImage={this.state.computerCardImage}
+        />
+        <p>player</p>
+        <PlayerCardsTile
+          id={this.state.playerCardKey}
+          key={this.state.playerCardKey}
+          playerCardSuit={this.state.playerCardSuit}
+          playerCardValue={this.state.playerCardValue}
+          playerCardImage={this.state.playerCardImage}
+        />
       </div>
     )
   }
