@@ -19941,9 +19941,11 @@
 	      computerCardValue: '',
 	      computerCardImage: '',
 	      playerScore: 0,
-	      computerScore: 0
+	      computerScore: 0,
+	      playingDeck: []
 	    };
-	    _this.getPlayerCard = _this.getPlayerCard.bind(_this);
+	    _this.letsBattle = _this.letsBattle.bind(_this);
+	    _this.getDeck = _this.getDeck.bind(_this);
 	    _this.addPlayerScore = _this.addPlayerScore.bind(_this);
 	    _this.addCompScore = _this.addCompScore.bind(_this);
 	    _this.clearGameScore = _this.clearGameScore.bind(_this);
@@ -19974,44 +19976,38 @@
 	    }
 	  }, {
 	    key: 'readPlayerFaces',
-	    value: function readPlayerFaces() {
-	      if (this.state.playerCardValue === 'ACE') {
-	        this.setState({ playerCardValue: 14 });
-	      } else if (this.state.playerCardValue === 'KING') {
-	        this.setState({ playerCardValue: 13 });
-	      } else if (this.state.playerCardValue === 'QUEEN') {
-	        this.setState({ playerCardValue: 12 });
-	      } else if (this.state.playerCardValue === 'JACK') {
-	        this.setState({ playerCardValue: 11 });
+	    value: function readPlayerFaces(card) {
+	      if (card.value === 'ACE') {
+	        card.value = 14;
+	      } else if (card.value === 'KING') {
+	        card.value = 13;
+	      } else if (card.value === 'QUEEN') {
+	        card.value = 12;
+	      } else if (card.value === 'JACK') {
+	        card.value = 11;
 	      }
 	    }
 	  }, {
 	    key: 'readComputerFaces',
-	    value: function readComputerFaces() {
-	      if (this.state.computerCardValue === 'ACE') {
-	        this.setState({ computerCardValue: 14 });
-	      } else if (this.state.computerCardValue === 'KING') {
-	        this.setState({ computerCardValue: 13 });
-	      } else if (this.state.computerCardValue === 'QUEEN') {
-	        this.setState({ computerCardValue: 12 });
-	      } else if (this.state.computerCardValue === 'JACK') {
-	        this.setState({ computerCardValue: 11 });
+	    value: function readComputerFaces(card) {
+	      if (card.value === 'ACE') {
+	        card.value = 14;
+	      } else if (card.value === 'KING') {
+	        card.value = 13;
+	      } else if (card.value === 'QUEEN') {
+	        card.value = 12;
+	      } else if (card.value === 'JACK') {
+	        card.value = 11;
 	      }
 	    }
 	  }, {
 	    key: 'assessBattle',
 	    value: function assessBattle() {
-	      if (typeof this.state.computerCardValue === 'string') {
-	        this.readComputerFaces();
-	      }
-	      if (typeof this.state.playerCardValue === 'string') {
-	        this.readPlayerFaces();
-	      }
 	      if (this.state.computerCardValue > this.state.playerCardValue) {
 	        this.addCompScore();
 	      } else if (this.state.computerCardValue < this.state.playerCardValue) {
 	        this.addPlayerScore();
-	      } else {
+	      } else if (this.state.computerCardValue == '' && this.state.playerCardValue == '') {} else {
 	        this.addPlayerScore();
 	        this.addCompScore();
 	      }
@@ -20020,60 +20016,59 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {}
 	  }, {
-	    key: 'getPlayerCard',
-	    value: function getPlayerCard() {
+	    key: 'letsBattle',
+	    value: function letsBattle() {
+	      var battle = [];
+	      battle = this.state.playingDeck.splice(0, 2);
+	      this.readComputerFaces(battle[0]);
+	      this.readPlayerFaces(battle[1]);
+	      this.setState({
+	        computerCardValue: battle[0].value,
+	        computerCardImage: battle[0].image,
+	        computerCardSuit: battle[0].suit,
+	        computerCardKey: 0,
+	        playerCardValue: battle[1].value,
+	        playerCardImage: battle[1].image,
+	        playerCardSuit: battle[1].suit,
+	        playerCardKey: 1
+	      });
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.assessBattle();
+	    }
+	  }, {
+	    key: 'getDeck',
+	    value: function getDeck() {
 	      var _this2 = this;
 
+	      var deckFetch = [];
 	      var deckster = this.props.deckId;
-	      fetch('https://deckofcardsapi.com/api/deck/' + deckster + '/draw/?count=2').then(function (response) {
+	      fetch('https://deckofcardsapi.com/api/deck/' + deckster + '/draw/?count=52').then(function (response) {
 	        return response.json();
 	      }).then(function (responseData) {
-	        _this2.setState({
-	          remaing: responseData.remaining,
-	          playerCardSuit: responseData.cards[0].suit,
-	          playerCardValue: responseData.cards[0].value,
-	          playerCardImage: responseData.cards[0].image,
-	          playerCardKey: 0,
-	          computerCardSuit: responseData.cards[1].suit,
-	          computerCardValue: responseData.cards[1].value,
-	          computerCardImage: responseData.cards[1].image,
-	          computerCardKey: 1
+	        responseData.cards.map(function (card, i) {
+	          deckFetch.push(card);
 	        });
-	        _this2.assessBattle();
+	        _this2.setState({ playingDeck: deckFetch });
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 
-	      // let renderGameLogic = () => {
-	      //   if (this.state.playerCardImage != ''){
-	      //     return(
-	      //       <GamePlayContainer
-	      //       addPlayerScore={this.addPlayerScore}
-	      //       addCompScore={this.addCompScore}
-	      //       clearGameScore={this.clearGameScore}
-	      //       computer_id={this.state.computerCardKey}
-	      //       computerCardSuit={this.state.computerCardSuit}
-	      //       computerCardValue={this.state.computerCardValue}
-	      //       computerCardImage={this.state.computerCardImage}
-	      //       player_id={this.state.playerCardKey}
-	      //       playerCardSuit={this.state.playerCardSuit}
-	      //       playerCardValue={this.state.playerCardValue}
-	      //       playerCardImage={this.state.playerCardImage}
-	      //       />
-	      //     )
-	      //   }
-	      // }
-	      //
-
-
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
 	          'button',
-	          { onClick: this.getPlayerCard },
+	          { onClick: this.getDeck },
+	          'START'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.letsBattle },
 	          'DRAW'
 	        ),
 	        _react2.default.createElement(_ScoreTile2.default, {
@@ -20269,11 +20264,10 @@
 	        _react2.default.createElement(
 	          'h1',
 	          null,
-	          ' Player Score: ',
-	          this.props.playerScore,
-	          ', Computer Score: ',
+	          ' Computer Score: ',
 	          this.props.computerScore,
-	          ' '
+	          ', Player Score: ',
+	          this.props.playerScore
 	        )
 	      );
 	    }

@@ -8,7 +8,7 @@ class ScoreTile extends React.Component {
   render(){
     return(
       <div>
-        <h1> Player Score: {this.props.playerScore}, Computer Score: {this.props.computerScore} </h1>
+        <h1> Computer Score: {this.props.computerScore}, Player Score: {this.props.playerScore}</h1>
       </div>
     )
   }

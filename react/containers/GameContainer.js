@@ -15,9 +15,11 @@ class GameContainer extends Component {
       computerCardValue: '',
       computerCardImage: '',
       playerScore: 0,
-      computerScore: 0
+      computerScore: 0,
+      playingDeck: []
     }
-    this.getPlayerCard = this.getPlayerCard.bind(this);
+    this.letsBattle = this.letsBattle.bind(this);
+    this.getDeck = this.getDeck.bind(this);
     this.addPlayerScore = this.addPlayerScore.bind(this);
     this.addCompScore = this.addCompScore.bind(this);
     this.clearGameScore = this.clearGameScore.bind(this);
@@ -42,42 +44,38 @@ class GameContainer extends Component {
     this.setState({ computerScore: clearcomp, playerScore: clearplayer })
   }
 
-  readPlayerFaces(){
-    if (this.state.playerCardValue === 'ACE') {
-      this.setState({ playerCardValue: 14 })
-    } else if (this.state.playerCardValue === 'KING') {
-      this.setState({ playerCardValue: 13 })
-    } else if (this.state.playerCardValue === 'QUEEN') {
-      this.setState({ playerCardValue: 12 })
-    } else if (this.state.playerCardValue === 'JACK') {
-      this.setState({ playerCardValue: 11 })
+  readPlayerFaces(card){
+    if (card.value === 'ACE') {
+      card.value = 14;
+    } else if (card.value === 'KING') {
+      card.value = 13;
+    } else if (card.value === 'QUEEN') {
+      card.value = 12;
+    } else if (card.value === 'JACK') {
+      card.value = 11;
     }
   }
 
-  readComputerFaces(){
-    if (this.state.computerCardValue === 'ACE') {
-      this.setState({ computerCardValue: 14 })
-    } else if (this.state.computerCardValue === 'KING') {
-      this.setState({ computerCardValue: 13 })
-    } else if (this.state.computerCardValue === 'QUEEN') {
-      this.setState({ computerCardValue: 12 })
-    } else if (this.state.computerCardValue === 'JACK') {
-      this.setState({ computerCardValue: 11 })
+  readComputerFaces(card){
+    if (card.value === 'ACE') {
+      card.value = 14;
+    } else if (card.value === 'KING') {
+      card.value = 13;
+    } else if (card.value === 'QUEEN') {
+      card.value = 12;
+    } else if (card.value === 'JACK') {
+      card.value = 11;
     }
   }
 
   assessBattle(){
-    if (typeof this.state.computerCardValue === 'string') {
-      this.readComputerFaces();
-    }
-    if (typeof this.state.playerCardValue === 'string') {
-      this.readPlayerFaces();
-    }
     if (this.state.computerCardValue > this.state.playerCardValue){
       this.addCompScore();
     }
     else if (this.state.computerCardValue < this.state.playerCardValue) {
       this.addPlayerScore();
+    }
+    else if (this.state.computerCardValue == '' && this.state.playerCardValue == ''){
     }
     else {
       this.addPlayerScore();
@@ -88,54 +86,45 @@ class GameContainer extends Component {
   componentDidMount(){
   }
 
-  getPlayerCard() {
-    let deckster = this.props.deckId;
-    fetch(`https://deckofcardsapi.com/api/deck/${deckster}/draw/?count=2`)
-    .then(response => response.json())
-    .then(responseData => {
-      this.setState({
-        remaing: responseData.remaining,
-        playerCardSuit: responseData.cards[0].suit,
-        playerCardValue: responseData.cards[0].value,
-        playerCardImage: responseData.cards[0].image,
-        playerCardKey: 0,
-        computerCardSuit: responseData.cards[1].suit,
-        computerCardValue: responseData.cards[1].value,
-        computerCardImage: responseData.cards[1].image,
-        computerCardKey: 1
-       })
-      this.assessBattle();
+  letsBattle(){
+    let battle = [];
+    battle = this.state.playingDeck.splice(0,2)
+    this.readComputerFaces(battle[0])
+    this.readPlayerFaces(battle[1])
+    this.setState({
+      computerCardValue:  battle[0].value,
+      computerCardImage:  battle[0].image,
+      computerCardSuit:   battle[0].suit,
+      computerCardKey:    0,
+      playerCardValue:    battle[1].value,
+      playerCardImage:    battle[1].image,
+      playerCardSuit:     battle[1].suit,
+      playerCardKey:      1
     })
   }
 
-
+  componentDidUpdate(){
+    this.assessBattle();
+  }
+  
+  getDeck() {
+    let deckFetch = [];
+    let deckster = this.props.deckId;
+    fetch(`https://deckofcardsapi.com/api/deck/${deckster}/draw/?count=52`)
+    .then(response => response.json())
+    .then(responseData => {
+      responseData.cards.map((card, i) => {
+        deckFetch.push(card);
+      })
+      this.setState({ playingDeck : deckFetch })
+    })
+  }
   render() {
-
-    // let renderGameLogic = () => {
-    //   if (this.state.playerCardImage != ''){
-    //     return(
-    //       <GamePlayContainer
-    //       addPlayerScore={this.addPlayerScore}
-    //       addCompScore={this.addCompScore}
-    //       clearGameScore={this.clearGameScore}
-    //       computer_id={this.state.computerCardKey}
-    //       computerCardSuit={this.state.computerCardSuit}
-    //       computerCardValue={this.state.computerCardValue}
-    //       computerCardImage={this.state.computerCardImage}
-    //       player_id={this.state.playerCardKey}
-    //       playerCardSuit={this.state.playerCardSuit}
-    //       playerCardValue={this.state.playerCardValue}
-    //       playerCardImage={this.state.playerCardImage}
-    //       />
-    //     )
-    //   }
-    // }
-    //
-
 
     return(
       <div>
-        <button onClick={this.getPlayerCard}>DRAW</button>
+        <button onClick={this.getDeck}>START</button>
+        <button onClick={this.letsBattle}>DRAW</button>
         <ScoreTile
           playerScore={this.state.playerScore}
           computerScore={this.state.computerScore}
