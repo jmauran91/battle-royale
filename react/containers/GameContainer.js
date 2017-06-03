@@ -9,40 +9,19 @@ class GameContainer extends Component {
     this.state = {
       remaining: '',
       playerCardSuit: '',
-      playerCardValue: '',
+      playerCardValue: null,
       playerCardImage: '',
       computerCardSuit: '',
-      computerCardValue: '',
+      computerCardValue: null,
       computerCardImage: '',
-      playerScore: 0,
-      computerScore: 0,
       playingDeck: []
     }
     this.letsBattle = this.letsBattle.bind(this);
     this.getDeck = this.getDeck.bind(this);
-    this.addPlayerScore = this.addPlayerScore.bind(this);
-    this.addCompScore = this.addCompScore.bind(this);
-    this.clearGameScore = this.clearGameScore.bind(this);
-    this.assessBattle = this.assessBattle.bind(this);
     this.readComputerFaces = this.readComputerFaces.bind(this);
     this.readPlayerFaces = this.readPlayerFaces.bind(this);
   }
 
-  addPlayerScore(){
-    let score = this.state.playerScore + 1
-    this.setState({ playerScore: score })
-  }
-
-  addCompScore(){
-    let score = this.state.computerScore + 1
-    this.setState({ computerScore: score })
-  }
-
-  clearGameScore(){
-    let clearcomp = 0;
-    let clearplayer = 0;
-    this.setState({ computerScore: clearcomp, playerScore: clearplayer })
-  }
 
   readPlayerFaces(card){
     if (card.value === 'ACE') {
@@ -68,45 +47,35 @@ class GameContainer extends Component {
     }
   }
 
-  assessBattle(){
-    if (this.state.computerCardValue > this.state.playerCardValue){
-      this.addCompScore();
-    }
-    else if (this.state.computerCardValue < this.state.playerCardValue) {
-      this.addPlayerScore();
-    }
-    else if (this.state.computerCardValue == '' && this.state.playerCardValue == ''){
-    }
-    else {
-      this.addPlayerScore();
-      this.addCompScore();
-    }
-  }
-
-  componentDidMount(){
-  }
-
   letsBattle(){
     let battle = [];
+    // let battleVerdict;
     battle = this.state.playingDeck.splice(0,2)
     this.readComputerFaces(battle[0])
     this.readPlayerFaces(battle[1])
+    // if (battle[0].value > battle[1].value){
+    //   battleVerdict = 0;
+    // }
+    // else if (battle[1].value > battle[0].value) {
+    //   battleVerdict = 1;
+    // }
+    // else {
+    //   battleVerdict = 2;
+    // }
+    let playerVal = parseInt(battle[1].value)
+    let compVal = parseInt(battle[0].value)
     this.setState({
-      computerCardValue:  battle[0].value,
+      computerCardValue:  compVal,
       computerCardImage:  battle[0].image,
       computerCardSuit:   battle[0].suit,
       computerCardKey:    0,
-      playerCardValue:    battle[1].value,
+      playerCardValue:    playerVal,
       playerCardImage:    battle[1].image,
       playerCardSuit:     battle[1].suit,
       playerCardKey:      1
     })
   }
 
-  componentDidUpdate(){
-    this.assessBattle();
-  }
-  
   getDeck() {
     let deckFetch = [];
     let deckster = this.props.deckId;
@@ -126,8 +95,8 @@ class GameContainer extends Component {
         <button onClick={this.getDeck}>START</button>
         <button onClick={this.letsBattle}>DRAW</button>
         <ScoreTile
-          playerScore={this.state.playerScore}
-          computerScore={this.state.computerScore}
+          computerCardValue= {this.state.computerCardValue}
+          playerCardValue= {this.state.playerCardValue}
         />
         <p>computer</p>
         <ComputerCardsTile

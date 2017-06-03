@@ -19935,46 +19935,21 @@
 	    _this.state = {
 	      remaining: '',
 	      playerCardSuit: '',
-	      playerCardValue: '',
+	      playerCardValue: null,
 	      playerCardImage: '',
 	      computerCardSuit: '',
-	      computerCardValue: '',
+	      computerCardValue: null,
 	      computerCardImage: '',
-	      playerScore: 0,
-	      computerScore: 0,
 	      playingDeck: []
 	    };
 	    _this.letsBattle = _this.letsBattle.bind(_this);
 	    _this.getDeck = _this.getDeck.bind(_this);
-	    _this.addPlayerScore = _this.addPlayerScore.bind(_this);
-	    _this.addCompScore = _this.addCompScore.bind(_this);
-	    _this.clearGameScore = _this.clearGameScore.bind(_this);
-	    _this.assessBattle = _this.assessBattle.bind(_this);
 	    _this.readComputerFaces = _this.readComputerFaces.bind(_this);
 	    _this.readPlayerFaces = _this.readPlayerFaces.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(GameContainer, [{
-	    key: 'addPlayerScore',
-	    value: function addPlayerScore() {
-	      var score = this.state.playerScore + 1;
-	      this.setState({ playerScore: score });
-	    }
-	  }, {
-	    key: 'addCompScore',
-	    value: function addCompScore() {
-	      var score = this.state.computerScore + 1;
-	      this.setState({ computerScore: score });
-	    }
-	  }, {
-	    key: 'clearGameScore',
-	    value: function clearGameScore() {
-	      var clearcomp = 0;
-	      var clearplayer = 0;
-	      this.setState({ computerScore: clearcomp, playerScore: clearplayer });
-	    }
-	  }, {
 	    key: 'readPlayerFaces',
 	    value: function readPlayerFaces(card) {
 	      if (card.value === 'ACE') {
@@ -20001,42 +19976,34 @@
 	      }
 	    }
 	  }, {
-	    key: 'assessBattle',
-	    value: function assessBattle() {
-	      if (this.state.computerCardValue > this.state.playerCardValue) {
-	        this.addCompScore();
-	      } else if (this.state.computerCardValue < this.state.playerCardValue) {
-	        this.addPlayerScore();
-	      } else if (this.state.computerCardValue == '' && this.state.playerCardValue == '') {} else {
-	        this.addPlayerScore();
-	        this.addCompScore();
-	      }
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
-	  }, {
 	    key: 'letsBattle',
 	    value: function letsBattle() {
 	      var battle = [];
+	      // let battleVerdict;
 	      battle = this.state.playingDeck.splice(0, 2);
 	      this.readComputerFaces(battle[0]);
 	      this.readPlayerFaces(battle[1]);
+	      // if (battle[0].value > battle[1].value){
+	      //   battleVerdict = 0;
+	      // }
+	      // else if (battle[1].value > battle[0].value) {
+	      //   battleVerdict = 1;
+	      // }
+	      // else {
+	      //   battleVerdict = 2;
+	      // }
+	      var playerVal = parseInt(battle[1].value);
+	      var compVal = parseInt(battle[0].value);
 	      this.setState({
-	        computerCardValue: battle[0].value,
+	        computerCardValue: compVal,
 	        computerCardImage: battle[0].image,
 	        computerCardSuit: battle[0].suit,
 	        computerCardKey: 0,
-	        playerCardValue: battle[1].value,
+	        playerCardValue: playerVal,
 	        playerCardImage: battle[1].image,
 	        playerCardSuit: battle[1].suit,
 	        playerCardKey: 1
 	      });
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      this.assessBattle();
 	    }
 	  }, {
 	    key: 'getDeck',
@@ -20072,8 +20039,8 @@
 	          'DRAW'
 	        ),
 	        _react2.default.createElement(_ScoreTile2.default, {
-	          playerScore: this.state.playerScore,
-	          computerScore: this.state.computerScore
+	          computerCardValue: this.state.computerCardValue,
+	          playerCardValue: this.state.playerCardValue
 	        }),
 	        _react2.default.createElement(
 	          'p',
@@ -20238,6 +20205,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _GameNumbers = __webpack_require__(164);
+
+	var _GameNumbers2 = _interopRequireDefault(_GameNumbers);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20252,23 +20223,68 @@
 	  function ScoreTile(props) {
 	    _classCallCheck(this, ScoreTile);
 
-	    return _possibleConstructorReturn(this, (ScoreTile.__proto__ || Object.getPrototypeOf(ScoreTile)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (ScoreTile.__proto__ || Object.getPrototypeOf(ScoreTile)).call(this, props));
+
+	    _this.state = {
+	      playerScore: 0,
+	      computerScore: 0
+	    };
+
+	    _this.augPlayer = _this.augPlayer.bind(_this);
+	    _this.augComputer = _this.augComputer.bind(_this);
+	    _this.assessHand = _this.assessHand.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(ScoreTile, [{
+	    key: 'augPlayer',
+	    value: function augPlayer() {
+	      var player = this.state.playerScore + 1;
+	      this.setState({ playerScore: player });
+	    }
+	  }, {
+	    key: 'augComputer',
+	    value: function augComputer() {
+	      debugger;
+	      var computer = this.state.computerScore + 1;
+	      this.setState({ computerScore: computer });
+	    }
+	  }, {
+	    key: 'assessHand',
+	    value: function assessHand() {
+	      if (this.props.computerCardValue > this.props.playerCardValue) {
+	        this.augComputer();
+	      } else if (this.props.computerCardValue < this.props.playerCardValue) {
+	        this.augPlayer();
+	      } else {
+	        null;
+	      }
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.assessHand();
+	      // if (this.props.battleDeterminer == 0) {
+	      //   this.augPlayer();
+	      // }
+	      // else if (this.props.battleDeterminer == 1) {
+	      //   this.augComputer();
+	      // }
+	      // else {
+	      //   this.augPlayer();
+	      //   this.augComputer();
+	      // }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          ' Computer Score: ',
-	          this.props.computerScore,
-	          ', Player Score: ',
-	          this.props.playerScore
-	        )
+	        _react2.default.createElement(_GameNumbers2.default, {
+	          computerScore: this.state.computerScore,
+	          playerScore: this.state.playerScore
+	        })
 	      );
 	    }
 	  }]);
@@ -20277,6 +20293,35 @@
 	}(_react2.default.Component);
 
 	exports.default = ScoreTile;
+
+/***/ }),
+/* 164 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GameNumbers = function GameNumbers(props) {
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    ' Computer Score: ',
+	    props.computerScore,
+	    ', Player Score: ',
+	    props.playerScore
+	  );
+	};
+
+	exports.default = GameNumbers;
 
 /***/ })
 /******/ ]);
