@@ -91,19 +91,33 @@ class GameContainer extends Component {
     battle = this.state.playingDeck.splice(0,2)
     this.readComputerFaces(battle[0])
     this.readPlayerFaces(battle[1])
+    let newcomp, newplayer;
     let compCardVal = parseInt(battle[0].value);
     let humanCardVal = parseInt(battle[1].value);
+    if (compCardVal > humanCardVal){
+      newcomp = this.state.computerScore + 1;
+      newplayer = this.state.playerScore
+    }
+    else if (humanCardVal > compCardVal) {
+      newcomp = this.state.computerScore;
+      newplayer = this.state.playerScore + 1;
+    }
+    else if (humanCardVal == compCardVal){
+      newcomp = this.state.computerScore + 1;
+      newplayer = this.state.playerScore + 1;
+    }
     this.setState({
       computerCardValue:  compCardVal,
       computerCardImage:  battle[0].image,
       computerCardSuit:   battle[0].suit,
       computerCardKey:    0,
+      computerScore:      newcomp,
       playerCardValue:    humanCardVal,
       playerCardImage:    battle[1].image,
       playerCardSuit:     battle[1].suit,
-      playerCardKey:      1
+      playerCardKey:      1,
+      playerScore:        newplayer
     })
-    this.assessBattle();
   }
 
   getDeck() {
