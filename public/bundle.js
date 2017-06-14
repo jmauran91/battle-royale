@@ -19942,32 +19942,18 @@
 	      computerCardImage: '',
 	      playerScore: 0,
 	      computerScore: 0,
-	      playingDeck: []
+	      playingDeck: [],
+	      gameStatus: ''
 	    };
 	    _this.letsBattle = _this.letsBattle.bind(_this);
 	    _this.getDeck = _this.getDeck.bind(_this);
-	    _this.addPlayerScore = _this.addPlayerScore.bind(_this);
-	    _this.addCompScore = _this.addCompScore.bind(_this);
 	    _this.clearGameScore = _this.clearGameScore.bind(_this);
-	    _this.assessBattle = _this.assessBattle.bind(_this);
 	    _this.readComputerFaces = _this.readComputerFaces.bind(_this);
 	    _this.readPlayerFaces = _this.readPlayerFaces.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(GameContainer, [{
-	    key: 'addPlayerScore',
-	    value: function addPlayerScore() {
-	      var score = this.state.playerScore + 1;
-	      this.setState({ playerScore: score });
-	    }
-	  }, {
-	    key: 'addCompScore',
-	    value: function addCompScore() {
-	      var score = this.state.computerScore + 1;
-	      this.setState({ computerScore: score });
-	    }
-	  }, {
 	    key: 'clearGameScore',
 	    value: function clearGameScore() {
 	      var clearcomp = 0;
@@ -20001,40 +19987,36 @@
 	      }
 	    }
 	  }, {
-	    key: 'assessBattle',
-	    value: function assessBattle() {
-	      if (this.state.computerCardValue > this.state.playerCardValue) {
-	        this.addCompScore();
-	      } else if (this.state.computerCardValue < this.state.playerCardValue) {
-	        this.addPlayerScore();
-	      } else if (this.state.computerCardValue == '' && this.state.playerCardValue == '') {} else {
-	        this.addPlayerScore();
-	        this.addCompScore();
-	      }
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
-	  }, {
 	    key: 'letsBattle',
 	    value: function letsBattle() {
 	      var battle = [];
+	      var newcomp = void 0,
+	          newplayer = void 0,
+	          gameSt = void 0;
 	      battle = this.state.playingDeck.splice(0, 2);
 	      this.readComputerFaces(battle[0]);
 	      this.readPlayerFaces(battle[1]);
-	      var newcomp = void 0,
-	          newplayer = void 0;
 	      var compCardVal = parseInt(battle[0].value);
 	      var humanCardVal = parseInt(battle[1].value);
 	      if (compCardVal > humanCardVal) {
 	        newcomp = this.state.computerScore + 1;
 	        newplayer = this.state.playerScore;
+	        gameSt = 'Computer wins round!';
 	      } else if (humanCardVal > compCardVal) {
 	        newcomp = this.state.computerScore;
 	        newplayer = this.state.playerScore + 1;
+	        gameSt = 'Player wins round!';
 	      } else if (humanCardVal == compCardVal) {
 	        newcomp = this.state.computerScore + 1;
 	        newplayer = this.state.playerScore + 1;
+	        gameSt = 'Tie round';
+	      }
+	      if (this.state.playingDeck.length == 0 && humanCardVal > compCardVal) {
+	        gameSt = 'Player wins game!';
+	      } else if (this.state.playingDeck.length == 0 && compCardVal > humanCardVal) {
+	        gameSt = 'Computer wins game!';
+	      } else if (this.state.playingDeck.length == 0 && compCardVal == humanCardVal) {
+	        gameSt = 'Tie game!';
 	      }
 	      this.setState({
 	        computerCardValue: compCardVal,
@@ -20046,7 +20028,8 @@
 	        playerCardImage: battle[1].image,
 	        playerCardSuit: battle[1].suit,
 	        playerCardKey: 1,
-	        playerScore: newplayer
+	        playerScore: newplayer,
+	        gameStatus: gameSt
 	      });
 	    }
 	  }, {
@@ -20084,7 +20067,8 @@
 	        ),
 	        _react2.default.createElement(_ScoreTile2.default, {
 	          playerScore: this.state.playerScore,
-	          computerScore: this.state.computerScore
+	          computerScore: this.state.computerScore,
+	          gameStatus: this.state.gameStatus
 	        }),
 	        _react2.default.createElement(
 	          'p',
@@ -20272,6 +20256,13 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          ' ',
+	          this.props.gameStatus,
+	          ' '
+	        ),
 	        _react2.default.createElement(
 	          'h1',
 	          null,
