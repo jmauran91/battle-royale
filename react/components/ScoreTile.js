@@ -8,7 +8,7 @@ class ScoreTile extends React.Component {
   render(){
     return(
       <div>
-        <h1> {this.props.gameStatus} </h1>
+        <h1 className={this.props.gameFormat}> {this.props.gameStatus} </h1>
         <h1> Computer Score: {this.props.computerScore}, Player Score: {this.props.playerScore}</h1>
       </div>
     )
