@@ -2,3 +2,11 @@
 .hidden {
   display: none;
 }
+
+.pwin {
+  color: #32CD32;
+}
+
+.cwin {
+  color: red;
+}

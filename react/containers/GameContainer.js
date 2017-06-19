@@ -17,7 +17,8 @@ class GameContainer extends Component {
       playerScore: 0,
       computerScore: 0,
       playingDeck: [],
-      gameStatus: ''
+      gameStatus: '',
+      gameFormat: ''
     }
     this.letsBattle = this.letsBattle.bind(this);
     this.getDeck = this.getDeck.bind(this);
@@ -57,50 +58,57 @@ class GameContainer extends Component {
   }
 
   letsBattle(){
-    let battle = [];
-    let newcomp, newplayer, gameSt;
-    battle = this.state.playingDeck.splice(0,2)
-    this.readComputerFaces(battle[0])
-    this.readPlayerFaces(battle[1])
-    let compCardVal = parseInt(battle[0].value);
-    let humanCardVal = parseInt(battle[1].value);
-    if (compCardVal > humanCardVal){
-      newcomp = this.state.computerScore + 1;
-      newplayer = this.state.playerScore;
-      gameSt = 'Computer wins round!'
+    if ( this.state.playingDeck.length != 0 ){
+      let battle = [];
+      let newcomp, newplayer, gameSt, gameFo;
+      battle = this.state.playingDeck.splice(0,2)
+      this.readComputerFaces(battle[0])
+      this.readPlayerFaces(battle[1])
+      let compCardVal = parseInt(battle[0].value);
+      let humanCardVal = parseInt(battle[1].value);
+      if (compCardVal > humanCardVal){
+        newcomp = this.state.computerScore + 1;
+        newplayer = this.state.playerScore;
+        gameSt = 'Computer wins round!'
+        gameFo = 'cwin'
+      }
+      else if (humanCardVal > compCardVal) {
+        newcomp = this.state.computerScore;
+        newplayer = this.state.playerScore + 1;
+        gameSt = 'Player wins round!';
+        gameFo = 'pwin'
+      }
+      else if (humanCardVal == compCardVal){
+        newcomp = this.state.computerScore + 1;
+        newplayer = this.state.playerScore + 1;
+        gameSt = 'Tie round'
+      }
+      if ( this.state.playingDeck.length == 0 && humanCardVal > compCardVal ){
+        gameSt = 'Player wins game!';
+        gameFo = 'pwin'
+      }
+      else if ( this.state.playingDeck.length == 0 && compCardVal > humanCardVal ) {
+        gameSt = 'Computer wins game!';
+        gameFo = 'cwin'
+      }
+      else if ( this.state.playingDeck.length == 0 && compCardVal == humanCardVal ){
+        gameSt = 'Tie game!'
+      }
+      this.setState({
+        computerCardValue:  compCardVal,
+        computerCardImage:  battle[0].image,
+        computerCardSuit:   battle[0].suit,
+        computerCardKey:    0,
+        computerScore:      newcomp,
+        playerCardValue:    humanCardVal,
+        playerCardImage:    battle[1].image,
+        playerCardSuit:     battle[1].suit,
+        playerCardKey:      1,
+        playerScore:        newplayer,
+        gameStatus:         gameSt,
+        gameFormat:         gameFo
+      })
     }
-    else if (humanCardVal > compCardVal) {
-      newcomp = this.state.computerScore;
-      newplayer = this.state.playerScore + 1;
-      gameSt = 'Player wins round!'
-    }
-    else if (humanCardVal == compCardVal){
-      newcomp = this.state.computerScore + 1;
-      newplayer = this.state.playerScore + 1;
-      gameSt = 'Tie round'
-    }
-    if ( this.state.playingDeck.length == 0 && humanCardVal > compCardVal ){
-      gameSt = 'Player wins game!'
-    }
-    else if ( this.state.playingDeck.length == 0 && compCardVal > humanCardVal ) {
-      gameSt = 'Computer wins game!'
-    }
-    else if ( this.state.playingDeck.length == 0 && compCardVal == humanCardVal ){
-      gameSt = 'Tie game!'
-    }
-    this.setState({
-      computerCardValue:  compCardVal,
-      computerCardImage:  battle[0].image,
-      computerCardSuit:   battle[0].suit,
-      computerCardKey:    0,
-      computerScore:      newcomp,
-      playerCardValue:    humanCardVal,
-      playerCardImage:    battle[1].image,
-      playerCardSuit:     battle[1].suit,
-      playerCardKey:      1,
-      playerScore:        newplayer,
-      gameStatus:         gameSt
-    })
   }
 
   getDeck() {
@@ -125,6 +133,7 @@ class GameContainer extends Component {
           playerScore={this.state.playerScore}
           computerScore={this.state.computerScore}
           gameStatus={this.state.gameStatus}
+          gameFormat={this.state.gameFormat}
         />
         <p>computer</p>
         <ComputerCardsTile

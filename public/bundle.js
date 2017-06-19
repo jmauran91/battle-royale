@@ -19943,7 +19943,8 @@
 	      playerScore: 0,
 	      computerScore: 0,
 	      playingDeck: [],
-	      gameStatus: ''
+	      gameStatus: '',
+	      gameFormat: ''
 	    };
 	    _this.letsBattle = _this.letsBattle.bind(_this);
 	    _this.getDeck = _this.getDeck.bind(_this);
@@ -19989,48 +19990,56 @@
 	  }, {
 	    key: 'letsBattle',
 	    value: function letsBattle() {
-	      var battle = [];
-	      var newcomp = void 0,
-	          newplayer = void 0,
-	          gameSt = void 0;
-	      battle = this.state.playingDeck.splice(0, 2);
-	      this.readComputerFaces(battle[0]);
-	      this.readPlayerFaces(battle[1]);
-	      var compCardVal = parseInt(battle[0].value);
-	      var humanCardVal = parseInt(battle[1].value);
-	      if (compCardVal > humanCardVal) {
-	        newcomp = this.state.computerScore + 1;
-	        newplayer = this.state.playerScore;
-	        gameSt = 'Computer wins round!';
-	      } else if (humanCardVal > compCardVal) {
-	        newcomp = this.state.computerScore;
-	        newplayer = this.state.playerScore + 1;
-	        gameSt = 'Player wins round!';
-	      } else if (humanCardVal == compCardVal) {
-	        newcomp = this.state.computerScore + 1;
-	        newplayer = this.state.playerScore + 1;
-	        gameSt = 'Tie round';
+	      if (this.state.playingDeck.length != 0) {
+	        var battle = [];
+	        var newcomp = void 0,
+	            newplayer = void 0,
+	            gameSt = void 0,
+	            gameFo = void 0;
+	        battle = this.state.playingDeck.splice(0, 2);
+	        this.readComputerFaces(battle[0]);
+	        this.readPlayerFaces(battle[1]);
+	        var compCardVal = parseInt(battle[0].value);
+	        var humanCardVal = parseInt(battle[1].value);
+	        if (compCardVal > humanCardVal) {
+	          newcomp = this.state.computerScore + 1;
+	          newplayer = this.state.playerScore;
+	          gameSt = 'Computer wins round!';
+	          gameFo = 'cwin';
+	        } else if (humanCardVal > compCardVal) {
+	          newcomp = this.state.computerScore;
+	          newplayer = this.state.playerScore + 1;
+	          gameSt = 'Player wins round!';
+	          gameFo = 'pwin';
+	        } else if (humanCardVal == compCardVal) {
+	          newcomp = this.state.computerScore + 1;
+	          newplayer = this.state.playerScore + 1;
+	          gameSt = 'Tie round';
+	        }
+	        if (this.state.playingDeck.length == 0 && humanCardVal > compCardVal) {
+	          gameSt = 'Player wins game!';
+	          gameFo = 'pwin';
+	        } else if (this.state.playingDeck.length == 0 && compCardVal > humanCardVal) {
+	          gameSt = 'Computer wins game!';
+	          gameFo = 'cwin';
+	        } else if (this.state.playingDeck.length == 0 && compCardVal == humanCardVal) {
+	          gameSt = 'Tie game!';
+	        }
+	        this.setState({
+	          computerCardValue: compCardVal,
+	          computerCardImage: battle[0].image,
+	          computerCardSuit: battle[0].suit,
+	          computerCardKey: 0,
+	          computerScore: newcomp,
+	          playerCardValue: humanCardVal,
+	          playerCardImage: battle[1].image,
+	          playerCardSuit: battle[1].suit,
+	          playerCardKey: 1,
+	          playerScore: newplayer,
+	          gameStatus: gameSt,
+	          gameFormat: gameFo
+	        });
 	      }
-	      if (this.state.playingDeck.length == 0 && humanCardVal > compCardVal) {
-	        gameSt = 'Player wins game!';
-	      } else if (this.state.playingDeck.length == 0 && compCardVal > humanCardVal) {
-	        gameSt = 'Computer wins game!';
-	      } else if (this.state.playingDeck.length == 0 && compCardVal == humanCardVal) {
-	        gameSt = 'Tie game!';
-	      }
-	      this.setState({
-	        computerCardValue: compCardVal,
-	        computerCardImage: battle[0].image,
-	        computerCardSuit: battle[0].suit,
-	        computerCardKey: 0,
-	        computerScore: newcomp,
-	        playerCardValue: humanCardVal,
-	        playerCardImage: battle[1].image,
-	        playerCardSuit: battle[1].suit,
-	        playerCardKey: 1,
-	        playerScore: newplayer,
-	        gameStatus: gameSt
-	      });
 	    }
 	  }, {
 	    key: 'getDeck',
@@ -20068,7 +20077,8 @@
 	        _react2.default.createElement(_ScoreTile2.default, {
 	          playerScore: this.state.playerScore,
 	          computerScore: this.state.computerScore,
-	          gameStatus: this.state.gameStatus
+	          gameStatus: this.state.gameStatus,
+	          gameFormat: this.state.gameFormat
 	        }),
 	        _react2.default.createElement(
 	          'p',
@@ -20258,7 +20268,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'h1',
-	          null,
+	          { className: this.props.gameFormat },
 	          ' ',
 	          this.props.gameStatus,
 	          ' '
