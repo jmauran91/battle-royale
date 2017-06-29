@@ -14,6 +14,10 @@ class GameContainer extends Component {
       computerCardSuit: '',
       computerCardValue: '',
       computerCardImage: '',
+      compTieOne: null,
+      compTieTwo: null,
+      playTieOne: null,
+      playTieTwo: null,
       playerScore: 0,
       computerScore: 0,
       playingDeck: [],
@@ -25,12 +29,18 @@ class GameContainer extends Component {
     this.clearGameScore = this.clearGameScore.bind(this);
     this.readComputerFaces = this.readComputerFaces.bind(this);
     this.readPlayerFaces = this.readPlayerFaces.bind(this);
+    this.restartGame = this.restartGame.bind(this);
+    this.tieGameHandler = this.tieGameHandler.bind(this);
   }
 
   clearGameScore(){
     let clearcomp = 0;
     let clearplayer = 0;
     this.setState({ computerScore: clearcomp, playerScore: clearplayer })
+  }
+
+  restartGame(){
+
   }
 
   readPlayerFaces(card){
@@ -57,6 +67,15 @@ class GameContainer extends Component {
     }
   }
 
+  tieGameHandler(){
+    let battle_num = [];
+    battle = this.state.playingDeck.splice(0,4)
+    battle.map((card) => {
+      cardnum = parseInt(card.value)
+      battle_num.push(cardnum)
+    })
+  }
+
   letsBattle(){
     if ( this.state.playingDeck.length != 0 ){
       let battle = [];
@@ -79,9 +98,10 @@ class GameContainer extends Component {
         gameFo = 'pwin'
       }
       else if (humanCardVal == compCardVal){
-        newcomp = this.state.computerScore + 1;
-        newplayer = this.state.playerScore + 1;
-        gameSt = 'Tie round'
+        // newcomp = this.state.computerScore + 1;
+        // newplayer = this.state.playerScore + 1;
+        // gameSt = 'Tie round'
+        this.tieGameHandler()
       }
       if ( this.state.playingDeck.length == 0 && humanCardVal > compCardVal ){
         gameSt = 'Player wins game!';
@@ -142,6 +162,8 @@ class GameContainer extends Component {
           computerCardSuit={this.state.computerCardSuit}
           computerCardValue={this.state.computerCardValue}
           computerCardImage={this.state.computerCardImage}
+          tieCardOne={this.state.compTieOne}
+          tieCardTwo={this.state.compTieTwo}
         />
         <p>player</p>
         <PlayerCardsTile
@@ -150,6 +172,8 @@ class GameContainer extends Component {
           playerCardSuit={this.state.playerCardSuit}
           playerCardValue={this.state.playerCardValue}
           playerCardImage={this.state.playerCardImage}
+          tieCardOne={this.state.playTieOne}
+          tieCardTwo={this.state.playTieTwo}
         />
       </div>
     )
