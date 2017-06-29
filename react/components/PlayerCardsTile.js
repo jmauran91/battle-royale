@@ -7,22 +7,28 @@ class PlayerCardsTile extends Component {
     }
 
   }
-
-
   componentDidMount(){
 
   }
-
-
   render() {
 
 
-
-    return(
-      <div>
-        <img src={this.props.playerCardImage} width='130'/>
-      </div>
-    )
+    if(this.props.tieCardOne == null){
+      return(
+        <div>
+          <img src={this.props.playerCardImage} width='130'/>
+        </div>
+      )
+    }
+    else {
+      return(
+        <div>
+          <img src={this.props.playerCardImage} width='130'/>
+          <img src="http://bit.ly/2tuDLJI" width='130'/>
+          <img src={this.props.playTieTwo.image} width='130'/>
+        </div>
+      )
+    }
   }
 }
 
