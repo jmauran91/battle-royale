@@ -30,7 +30,6 @@ class GameContainer extends Component {
     this.readComputerFaces = this.readComputerFaces.bind(this);
     this.readPlayerFaces = this.readPlayerFaces.bind(this);
     this.restartGame = this.restartGame.bind(this);
-    this.tieGameHandler = this.tieGameHandler.bind(this);
   }
 
   clearGameScore(){
@@ -67,18 +66,10 @@ class GameContainer extends Component {
     }
   }
 
-  tieGameHandler(){
-    let battle_num = [];
-    battle = this.state.playingDeck.splice(0,4)
-    battle.map((card) => {
-      cardnum = parseInt(card.value)
-      battle_num.push(cardnum)
-    })
-  }
-
   letsBattle(){
     if ( this.state.playingDeck.length != 0 ){
       let battle = [];
+      let tiebattle = [null, null, null, null];
       let newcomp, newplayer, gameSt, gameFo;
       battle = this.state.playingDeck.splice(0,2)
       this.readComputerFaces(battle[0])
@@ -98,10 +89,30 @@ class GameContainer extends Component {
         gameFo = 'pwin'
       }
       else if (humanCardVal == compCardVal){
-        // newcomp = this.state.computerScore + 1;
-        // newplayer = this.state.playerScore + 1;
-        // gameSt = 'Tie round'
-        this.tieGameHandler()
+        // The War 'Tie Game' dynamic is stored inside this conditional
+        // Im sure there is a way to write it so that it is contained within a separate method
+        // But issues with React state-setting and variable scope make that more complicated
+        // than just writing it all within one method
+        tiebattle = this.state.playingDeck.splice(0,4)
+        tiebattle.map((card) => {
+          cardnum = parseInt(card.value)
+          tiebattle_num.push(cardnum)
+        })
+        if (tiebattle_num[1] > tiebattle_num[3]){
+
+          gameSt = 'Computer wins round!'
+          gameFo = 'cwin'
+        }
+        else if (tiebattle_num[1] == tiebattle_num[3]) {
+
+        }
+        else if (tiebattle_num[1] < tiebattle_num[3]) {
+          gameSt = 'Player wins round!';
+          gameFo = 'pwin'
+        }
+        else {
+
+        }
       }
       if ( this.state.playingDeck.length == 0 && humanCardVal > compCardVal ){
         gameSt = 'Player wins game!';
@@ -125,6 +136,10 @@ class GameContainer extends Component {
         playerCardSuit:     battle[1].suit,
         playerCardKey:      1,
         playerScore:        newplayer,
+        compTieOne:         tiebattle[0],
+        compTieTwo:         tiebattle[1],
+        playTieOne:         tiebattle[2],
+        playTieTwo:         tiebattle[3],
         gameStatus:         gameSt,
         gameFormat:         gameFo
       })
