@@ -19956,7 +19956,6 @@
 	    _this.readComputerFaces = _this.readComputerFaces.bind(_this);
 	    _this.readPlayerFaces = _this.readPlayerFaces.bind(_this);
 	    _this.restartGame = _this.restartGame.bind(_this);
-	    _this.tieGameHandler = _this.tieGameHandler.bind(_this);
 	    return _this;
 	  }
 
@@ -19997,29 +19996,20 @@
 	      }
 	    }
 	  }, {
-	    key: 'tieGameHandler',
-	    value: function tieGameHandler() {
-	      var battle_num = [];
-	      battle = this.state.playingDeck.splice(0, 4);
-	      battle.map(function (card) {
-	        cardnum = parseInt(card.value);
-	        battle_num.push(cardnum);
-	      });
-	    }
-	  }, {
 	    key: 'letsBattle',
 	    value: function letsBattle() {
 	      if (this.state.playingDeck.length != 0) {
-	        var _battle = [];
+	        var battle = [];
+	        var tiebattle = [null, null, null, null];
 	        var newcomp = void 0,
 	            newplayer = void 0,
 	            gameSt = void 0,
 	            gameFo = void 0;
-	        _battle = this.state.playingDeck.splice(0, 2);
-	        this.readComputerFaces(_battle[0]);
-	        this.readPlayerFaces(_battle[1]);
-	        var compCardVal = parseInt(_battle[0].value);
-	        var humanCardVal = parseInt(_battle[1].value);
+	        battle = this.state.playingDeck.splice(0, 2);
+	        this.readComputerFaces(battle[0]);
+	        this.readPlayerFaces(battle[1]);
+	        var compCardVal = parseInt(battle[0].value);
+	        var humanCardVal = parseInt(battle[1].value);
 	        if (compCardVal > humanCardVal) {
 	          newcomp = this.state.computerScore + 1;
 	          newplayer = this.state.playerScore;
@@ -20031,10 +20021,23 @@
 	          gameSt = 'Player wins round!';
 	          gameFo = 'pwin';
 	        } else if (humanCardVal == compCardVal) {
-	          // newcomp = this.state.computerScore + 1;
-	          // newplayer = this.state.playerScore + 1;
-	          // gameSt = 'Tie round'
-	          this.tieGameHandler();
+	          // The War 'Tie Game' dynamic is stored inside this conditional
+	          // Im sure there is a way to write it so that it is contained within a separate method
+	          // But issues with React state-setting and variable scope make that more complicated
+	          // than just writing it all within one method
+	          tiebattle = this.state.playingDeck.splice(0, 4);
+	          tiebattle.map(function (card) {
+	            cardnum = parseInt(card.value);
+	            tiebattle_num.push(cardnum);
+	          });
+	          if (tiebattle_num[1] > tiebattle_num[3]) {
+
+	            gameSt = 'Computer wins round!';
+	            gameFo = 'cwin';
+	          } else if (tiebattle_num[1] == tiebattle_num[3]) {} else if (tiebattle_num[1] < tiebattle_num[3]) {
+	            gameSt = 'Player wins round!';
+	            gameFo = 'pwin';
+	          } else {}
 	        }
 	        if (this.state.playingDeck.length == 0 && humanCardVal > compCardVal) {
 	          gameSt = 'Player wins game!';
@@ -20047,15 +20050,19 @@
 	        }
 	        this.setState({
 	          computerCardValue: compCardVal,
-	          computerCardImage: _battle[0].image,
-	          computerCardSuit: _battle[0].suit,
+	          computerCardImage: battle[0].image,
+	          computerCardSuit: battle[0].suit,
 	          computerCardKey: 0,
 	          computerScore: newcomp,
 	          playerCardValue: humanCardVal,
-	          playerCardImage: _battle[1].image,
-	          playerCardSuit: _battle[1].suit,
+	          playerCardImage: battle[1].image,
+	          playerCardSuit: battle[1].suit,
 	          playerCardKey: 1,
 	          playerScore: newplayer,
+	          compTieOne: tiebattle[0],
+	          compTieTwo: tiebattle[1],
+	          playTieOne: tiebattle[2],
+	          playTieTwo: tiebattle[3],
 	          gameStatus: gameSt,
 	          gameFormat: gameFo
 	        });
@@ -20181,11 +20188,21 @@
 	    key: 'render',
 	    value: function render() {
 
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement('img', { src: this.props.computerCardImage, width: '130' })
-	      );
+	      if (tieCardOne == null) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('img', { src: this.props.computerCardImage, width: '130' })
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('img', { src: this.props.computerCardImage, width: '130' }),
+	          _react2.default.createElement('img', { src: 'http://bit.ly/2tuDLJI', width: '130' }),
+	          _react2.default.createElement('img', { src: this.props.tieCardTwo.image, width: '130' })
+	        );
+	      }
 	    }
 	  }]);
 

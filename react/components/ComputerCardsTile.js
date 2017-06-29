@@ -17,12 +17,22 @@ class ComputerCardsTile extends Component {
   render() {
 
 
-
+  if (tieCardOne == null){
     return(
       <div>
         <img src={this.props.computerCardImage} width='130' />
       </div>
     )
+  }
+  else {
+    return(
+      <div>
+        <img src={this.props.computerCardImage} width='130' />
+        <img src="http://bit.ly/2tuDLJI" width='130' />
+        <img src={this.props.tieCardTwo.image} width='130' />
+      </div>
+    )
+  }
   }
 }
 
