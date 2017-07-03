@@ -93,9 +93,10 @@ class GameContainer extends Component {
         // Im sure there is a way to write it so that it is contained within a separate method
         // But issues with React state-setting and variable scope make that more complicated
         // than just writing it all within one method
-        tiebattle = this.state.playingDeck.splice(0,4)
+        let tiebattle = this.state.playingDeck.splice(0,4)
+        let tiebattle_num = []
         tiebattle.map((card) => {
-          cardnum = parseInt(card.value)
+          var cardnum = parseInt(card.value)
           tiebattle_num.push(cardnum)
         })
         if (tiebattle_num[1] > tiebattle_num[3]){

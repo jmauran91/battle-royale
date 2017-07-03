@@ -50,7 +50,7 @@ class App extends Component {
       } else {
         renderGame = () => {
            return(
-             <p>hi</p>
+             <p> </p>
            )
          }
       }
