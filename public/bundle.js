@@ -19851,7 +19851,7 @@
 	          return _react2.default.createElement(
 	            'p',
 	            null,
-	            'hi'
+	            ' '
 	          );
 	        };
 	      }
@@ -20029,9 +20029,10 @@
 	          // Im sure there is a way to write it so that it is contained within a separate method
 	          // But issues with React state-setting and variable scope make that more complicated
 	          // than just writing it all within one method
-	          tiebattle = this.state.playingDeck.splice(0, 4);
-	          tiebattle.map(function (card) {
-	            cardnum = parseInt(card.value);
+	          var _tiebattle = this.state.playingDeck.splice(0, 4);
+	          var tiebattle_num = [];
+	          _tiebattle.map(function (card) {
+	            var cardnum = parseInt(card.value);
 	            tiebattle_num.push(cardnum);
 	          });
 	          if (tiebattle_num[1] > tiebattle_num[3]) {

@@ -25,17 +25,19 @@ body{
   text-align: center;
   font-size: 80px;
   color: white;
+  margin: 60px 0px 20px 0px
 }
 .subheader{
   text-align: center;
   font-size: 35px;
   color: red;
+  margin: 10px 0px 10px 0px
 }
 .felt_table{
-
+  text-align: center;
 }
 .battle_button{
-
+  text-align: center;
 }
 .render_div{
 
