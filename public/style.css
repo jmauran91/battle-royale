@@ -10,3 +10,33 @@
 .cwin {
   color: red;
 }
+
+#app{
+
+}
+
+body{
+  background-image: url("felt.jpg");
+}
+.main_div{
+
+}
+.main_header{
+  text-align: center;
+  font-size: 80px;
+  color: white;
+}
+.subheader{
+  text-align: center;
+  font-size: 35px;
+  color: red;
+}
+.felt_table{
+
+}
+.battle_button{
+
+}
+.render_div{
+
+}

@@ -17,7 +17,7 @@ class ComputerCardsTile extends Component {
   render() {
 
 
-  if (tieCardOne == null){
+  if (this.props.tieCardOne == null){
     return(
       <div>
         <img src={this.props.computerCardImage} width='130' />
