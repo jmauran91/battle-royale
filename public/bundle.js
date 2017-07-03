@@ -20036,10 +20036,13 @@
 	            tiebattle_num.push(cardnum);
 	          });
 	          if (tiebattle_num[1] > tiebattle_num[3]) {
-
 	            gameSt = 'Computer wins round!';
 	            gameFo = 'cwin';
+	            newcomp = this.state.computerScore + 1;
+	            newplayer = this.state.playerScore;
 	          } else if (tiebattle_num[1] == tiebattle_num[3]) {} else if (tiebattle_num[1] < tiebattle_num[3]) {
+	            newcomp = this.state.computerScore;
+	            newplayer = this.state.playerScore + 1;
 	            gameSt = 'Player wins round!';
 	            gameFo = 'pwin';
 	          } else {}
