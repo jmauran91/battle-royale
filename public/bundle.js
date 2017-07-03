@@ -19858,26 +19858,30 @@
 
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'main_div' },
 	        _react2.default.createElement(
 	          'h1',
-	          null,
+	          { className: 'main_header' },
 	          'Welcome to Battle Royale'
 	        ),
 	        _react2.default.createElement(
 	          'p',
-	          null,
+	          { className: 'subheader' },
 	          'Get ready to battle'
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleGameToggleClick },
-	          'BATTLE'
-	        ),
-	        _react2.default.createElement(
 	          'div',
-	          null,
-	          renderGame()
+	          { className: 'felt_table' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'battle_button', onClick: this.handleGameToggleClick },
+	            'BATTLE'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'render_div' },
+	            renderGame()
+	          )
 	        )
 	      );
 	    }
@@ -20188,7 +20192,7 @@
 	    key: 'render',
 	    value: function render() {
 
-	      if (tieCardOne == null) {
+	      if (this.props.tieCardOne == null) {
 	        return _react2.default.createElement(
 	          'div',
 	          null,

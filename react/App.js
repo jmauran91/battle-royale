@@ -57,12 +57,14 @@ class App extends Component {
 
 
     return(
-      <div>
-        <h1>Welcome to Battle Royale</h1>
-        <p>Get ready to battle</p>
-        <button onClick={this.handleGameToggleClick}>BATTLE</button>
-        <div>
-        {renderGame()}
+      <div className="main_div">
+        <h1 className="main_header">Welcome to Battle Royale</h1>
+        <p className="subheader">Get ready to battle</p>
+        <div className="felt_table">
+          <button className="battle_button" onClick={this.handleGameToggleClick}>BATTLE</button>
+          <div className="render_div">
+          {renderGame()}
+          </div>
         </div>
       </div>
     )
